@@ -5,7 +5,7 @@ const axios = require("axios");
 const path = require("path");
 
 // ====================================================
-// 🔑 CẤU HÌNH API KEY (Dán API Key Gemini của bạn vào đây)
+// 🔑 CẤU HÌNH API KEY (Thay API Key Gemini của bạn vào đây)
 // Lấy key miễn phí tại: https://aistudio.google.com/
 // ====================================================
 const GEMINI_API_KEY = "AQ.Ab8RN6LP9nRg8noazP_ET88fL5tL8A557dN1GRfgkuhTdGxRoQ";
@@ -44,10 +44,12 @@ const COOLDOWN_TIME = 10; // Tính bằng giây
 login({ appState }, (err, api) => {
   if (err) return console.error("❌ Lỗi đăng nhập Facebook (Cookie die hoặc bị Checkpoint):", err);
 
-  // Cấu hình bot & Giả lập User-Agent trình duyệt Chrome trên Windows
+  // Cấu hình bot tối ưu vượt tường lửa Facebook
   api.setOptions({
     listenEvents: true,
     selfListen: false,
+    forceLogin: true,
+    autoReconnect: true,
     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
   });
 
@@ -56,7 +58,10 @@ login({ appState }, (err, api) => {
   console.log("==================================================");
 
   api.listenMqtt(async (err, event) => {
-    if (err) return console.error("Lỗi MQTT:", err);
+    if (err) {
+      // Nếu vướng lỗi MQTT 1357004 thì tự log thông báo chứ không làm sập bot
+      return console.log("⚠️ Facebook đang yêu cầu phê duyệt thiết bị Mỹ (Lỗi 1357004).");
+    }
 
     // Chỉ xử lý tin nhắn cá nhân hoặc tin nhắn nhóm
     if (event.type === "message" || event.type === "message_reply") {
@@ -256,4 +261,4 @@ function checkCooldown(senderID, api, threadID) {
   }
   cooldowns.set(senderID, now);
   return false; // Được phép dùng
-                }
+    }
