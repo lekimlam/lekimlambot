@@ -25,9 +25,9 @@ if (!fs.existsSync(cacheDir)) {
 
 
 // --- 3. ĐỌC COOKIE TỪ APPSTATE.JSON ---
-let appState;
+let appstate;
 try {
-    appState = JSON.parse(fs.readFileSync("appstate.json", "utf8"));
+    appstate = JSON.parse(fs.readFileSync("appstate.json", "utf8"));
 } catch (e) {
     console.error("❌ LỖI: Không tìm thấy hoặc lỗi file appstate.json!");
     process.exit(1);
