@@ -8,7 +8,7 @@ const path = require("path");
 // 🔑 CẤU HÌNH API KEY (Thay API Key Gemini của bạn vào đây)
 // Lấy key miễn phí tại: https://aistudio.google.com/
 // ====================================================
-const GEMINI_API_KEY = "DÁN_API_KEY_GEMINI_CỦA_BẠN_VÀO_ĐÂY";
+const GEMINI_API_KEY = "AQ.Ab8RN6LP9nRg8noazP_ET88fL5tL8A557dN1GRfgkuhTdGxRoQ";
 
 
 // --- 1. TẠO WEB SERVER (Giúp Render & UptimeRobot giữ bot 24/7) ---
