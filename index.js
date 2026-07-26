@@ -14,7 +14,7 @@ const GEMINI_API_KEY = "AQ.Ab8RN6LP9nRg8noazP_ET88fL5tL8A557dN1GRfgkuhTdGxRoQ";
 // --- 1. TẠO WEB SERVER (Giúp Render & UptimeRobot giữ bot 24/7) ---
 const app = express();
 app.get('/', (req, res) => res.send('Bot Facebook AI FULL đang hoạt động 24/7!'));
-app.listen(process.env.PORT || 3000, () => console.log('Web Server đã sẵn sàng...'));
+app.listen(process.env.PORT || 3000, "0.0.0.0", () => console.log('Web Server đã sẵn sàng...'));
 
 
 // --- 2. TẠO THƯ MỤC TẠM (DÙNG CHO TÍNH NĂNG AI VẼ ẢNH) ---
@@ -25,11 +25,12 @@ if (!fs.existsSync(cacheDir)) {
 
 
 // --- 3. ĐỌC COOKIE TỪ APPSTATE.JSON ---
-let appstate;
+let appState;
 try {
-    appstate = JSON.parse(fs.readFileSync("appstate.json", "utf8"));
+    const appStatePath = path.join(__dirname, "appstate.json");
+    appState = JSON.parse(fs.readFileSync(appStatePath, "utf8"));
 } catch (e) {
-    console.error("❌ LỖI: Không tìm thấy hoặc lỗi file appstate.json!");
+    console.error("❌ LỖI ĐỌC FILE APPSTATE:", e.message);
     process.exit(1);
 }
 
@@ -227,7 +228,7 @@ login({ appState }, (err, api) => {
 // --- HÀM BỔ TRỢ 1: GỌI GOOGLE GEMINI API ---
 // ====================================================
 async function callGeminiAPI(promptText) {
-  if (!GEMINI_API_KEY || GEMINI_API_KEY === "AQ.Ab8RN6LP9nRg8noazP_ET88fL5tL8A557dN1GRfgkuhTdGxRoQ") {
+  if (!GEMINI_API_KEY) {
     throw new Error("Chưa cài Gemini API Key vào file index.js");
   }
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -253,4 +254,4 @@ function checkCooldown(senderID, api, threadID) {
   }
   cooldowns.set(senderID, now);
   return false; // Được phép dùng
-      }
+              }
